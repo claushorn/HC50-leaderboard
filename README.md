@@ -1,4 +1,4 @@
-# Ridge on ESM2 embeddings — QMAP HC50
+# Ridge Regression on ESM2 embeddings for the QMAP HC50 benchmark
 
 The [QMAP](https://github.com/anthol42/QMAP) HC50 leaderboard carries a single entry: a
 linear probe on ESM2 embeddings at min/mean/max Pearson *r* = −0.18 / 0.07 / 0.29. That
