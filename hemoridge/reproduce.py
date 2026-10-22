@@ -3,8 +3,9 @@
 The QMAP HC50 leaderboard carries a single entry: a linear probe on ESM2
 embeddings at min/mean/max Pearson = -0.18 / 0.07 / 0.29. Reading
 `eval_prev_works/HemoLinear/main.py`, that probe is `LinearRegression` --
-UNREGULARISED ordinary least squares on 1280-dimensional ESM2 embeddings with
-752 training rows after the homology train mask. ESM2 embedding dimensions are
+UNREGULARISED ordinary least squares on 1280-dimensional ESM2 embeddings
+against 650-801 training rows, depending on the split, after the homology train
+mask. ESM2 embedding dimensions are
 strongly collinear, so OLS there is close to ill-posed, and will produce
 exactly the unstable, sometimes-negative cross-fold correlations reported.
 

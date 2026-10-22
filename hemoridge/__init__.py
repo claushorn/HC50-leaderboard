@@ -1,7 +1,8 @@
 """Ridge on ESM2 embeddings for the QMAP HC50 benchmark.
 
 A correction to the published HC50 baseline: the leaderboard's linear probe is
-unregularised OLS on 1280 collinear dimensions with 752 training rows, and
+unregularised OLS on 1280 collinear dimensions against 650-801 training rows
+(depending on the split), and
 regularising it -- changing nothing else -- moves mean Pearson r from 0.059 to
 0.270 and the worst split from -0.179 to +0.200.
 """

@@ -6,9 +6,10 @@ number reads as "hemolysis regression is unsolved."
 
 It is an estimator artifact. `eval_prev_works/HemoLinear/main.py` fits
 `sklearn.linear_model.LinearRegression` — unregularized OLS — on 1280-dimensional
-mean-pooled ESM2-650M embeddings with **752** training rows after the homology train mask.
-ESM2 dimensions are strongly collinear, so OLS there is close to ill-posed, and the
-instability is what the leaderboard's negative minimum records.
+mean-pooled ESM2-650M embeddings against **650–801** training rows, depending on the split,
+after the homology train mask. ESM2 dimensions are strongly collinear, so OLS in that
+regime is close to ill-posed, and the instability is what the leaderboard's negative
+minimum records.
 
 Replacing `LinearRegression` with ridge — penalty chosen by 5-fold CV on the training pool
 only, features standardized on train statistics, **nothing else changed** — moves the mean
@@ -21,7 +22,7 @@ QMAP's own filter chain, its five predefined splits, and its own `compute_metric
 | model | split 0 | 1 | 2 | 3 | 4 | min | mean | max |
 |---|---|---|---|---|---|---|---|---|
 | `esm2_ols` — HemoLinear, reproduced | −0.179 | 0.111 | 0.293 | 0.038 | 0.032 | −0.179 | **0.059** | 0.293 |
-| *published README row* | | | | | | *−0.180* | *0.070* | *0.290* |
+| *published README row* | *not published per split* | | | | | *−0.180* | *0.070* | *0.290* |
 | `esm2_ridge` — identical embeddings | 0.232 | 0.367 | 0.300 | 0.250 | 0.200 | **0.200** | **0.270** | 0.367 |
 | `desc_ridge` — 11 biophysical descriptors | 0.198 | 0.079 | 0.014 | 0.092 | 0.058 | 0.014 | 0.088 | 0.198 |
 | `desc_esm_ridge` — concatenated | 0.230 | 0.363 | 0.298 | 0.249 | 0.200 | 0.200 | 0.268 | 0.363 |
@@ -51,8 +52,27 @@ reports it alongside a `check_reproduction()` verdict, and the comparison that m
   alone (0.270), which shows the embeddings already subsume them — the fair representation
   comparison the OLS row could not support.
 
-Lambda is selected by inner CV on the training pool. The benchmark's test split is never
-consulted during selection, so ridge has no information advantage over the OLS baseline.
+### The setting, exactly
+
+| split | train rows (after `get_train_mask`) | test rows | lambda chosen for `esm2_ridge` |
+|---|---|---|---|
+| 0 | 752 | 173 | 300 |
+| 1 | 650 | 278 | 100 |
+| 2 | 801 | 129 | 300 |
+| 3 | 736 | 192 | 300 |
+| 4 | 773 | 141 | 300 |
+
+Training pool before the mask: 934 sequences; 930 unique sequences need embedding across
+the pool and all five splits.
+
+Lambda is selected by 5-fold CV **within the training pool only**, over the fixed grid
+`0.1 … 1e5`, and features are standardized on training statistics. The benchmark's test
+split is never read during selection or standardization, so ridge has no information
+advantage over the OLS baseline — the comparison isolates the estimator.
+
+Environment of the numbers above: Python 3.12.11, `qmap-benchmark` 0.1.1, numpy 2.5.4,
+scipy 1.18.1, scikit-learn 1.9.1, torch 2.14.1, transformers 5.20.2,
+`facebook/esm2_t33_650M_UR50D`, Apple silicon (MPS).
 
 ## Reproduce
 
@@ -62,10 +82,10 @@ cd HC50-leaderboard
 uv run python -m hemoridge.reproduce
 ```
 
-Downloads the QMAP dataset through `qmap-benchmark`, embeds ~1.1k unique sequences with
+Downloads the QMAP dataset through `qmap-benchmark`, embeds the 930 unique sequences with
 ESM2-650M (cached in `data/cache/`, so only the first run pays for it; CUDA, Apple MPS and
-CPU are all handled), fits all four models on all five splits, and writes
-`results/hc50_reproduction.csv`.
+CPU are all handled), fits all four models on all five splits, prints the control verdict,
+and writes `results/hc50_reproduction.csv`.
 
 Roughly 10 minutes on a laptop GPU for the embedding pass, seconds per model thereafter.
 
