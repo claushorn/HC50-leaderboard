@@ -33,7 +33,7 @@ Full per-split metrics, including Spearman, RMSE and R², are in
 
 `esm2_ols` is not a competing model. It is the harness's control: it reproduces the
 published row to 0.059 vs 0.070 and −0.179 vs −0.180. **If that row did not land on the
-published numbers, nothing else in the table would mean anything** — the difference below
+published numbers, nothing else in the table would mean anything**, the difference below
 it could be any of a dozen pipeline details rather than the estimator. `run()` therefore
 reports it alongside a `check_reproduction()` verdict, and the comparison that matters is
 `esm2_ols` → `esm2_ridge` with every other component held fixed.
@@ -44,11 +44,11 @@ reports it alongside a `check_reproduction()` verdict, and the comparison that m
   representation. One line of code accounts for a 4.6× difference in mean *r*.
 - **Does not:** claim hemolysis regression is solved. 0.270 is still modest. Replicate
   assays in DBAASP agree to roughly ±0.34 log₁₀, which puts the attainable ceiling near
-  *r* ≈ 0.88 — so there remains about an order of magnitude of headroom, and the HC50
+  *r* ≈ 0.88, so there remains about an order of magnitude of headroom, and the HC50
   target also silently pools assays performed on different target cells.
 - **Does not:** claim the biophysical descriptors are competitive. They are not (0.088).
   They are included because the concatenation (0.268) scores no better than the embeddings
-  alone (0.270), which shows the embeddings already subsume them — the fair representation
+  alone (0.270), which shows the embeddings already subsume them, the fair representation
   comparison the OLS row could not support.
 
 Lambda is selected by inner CV on the training pool. The benchmark's test split is never
