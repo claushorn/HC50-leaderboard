@@ -1,0 +1,29 @@
+[project]
+name = "hemoridge"
+version = "0.1.0"
+description = "Ridge on ESM2 embeddings for the QMAP HC50 benchmark: a correction to the published linear-probe baseline"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "qmap-benchmark>=0.1.1",
+    "numpy>=1.22",
+    "pandas>=1.4",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "torch>=2.2",
+    "transformers>=4.40",
+]
+
+[project.urls]
+Homepage = "https://github.com/claushorn/HC50-leaderboard"
+Benchmark = "https://github.com/anthol42/QMAP"
+
+[project.scripts]
+hemoridge-reproduce = "hemoridge.reproduce:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["hemoridge"]
