@@ -1,9 +1,8 @@
-# The text to post
+# The posted text
 
-Open at https://github.com/anthol42/QMAP/issues/new ; the leaderboard section of QMAP's
-README asks for an issue carrying the code to reproduce and the reference paper.
+Live at https://github.com/anthol42/QMAP/issues/1 ; this file is the source it was posted from.
 
-**Title:** `HC50 leaderboard: the ESM2 baseline is unregularized OLS; ridge on the same embeddings gives mean PCC 0.27`
+**Title:** `HC50 leaderboard: the ESM2 baseline is unregularized OLS; ridge regression on the same embeddings gives mean PCC 0.27`
 
 ---
 
