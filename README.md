@@ -5,14 +5,14 @@ linear probe on ESM2 embeddings at min/mean/max Pearson *r* = −0.18 / 0.07 / 0
 number reads as "hemolysis regression is unsolved."
 
 It is an estimator artifact. `eval_prev_works/HemoLinear/main.py` fits
-`sklearn.linear_model.LinearRegression` — unregularized OLS — on 1280-dimensional
+`sklearn.linear_model.LinearRegression`, unregularized OLS, on 1280-dimensional
 mean-pooled ESM2-650M embeddings against **650–801** training rows, depending on the split,
 after the homology train mask. ESM2 dimensions are strongly collinear, so OLS in that
 regime is close to ill-posed, and the instability is what the leaderboard's negative
 minimum records.
 
-Replacing `LinearRegression` with ridge — penalty chosen by 5-fold CV on the training pool
-only, features standardized on train statistics, **nothing else changed** — moves the mean
+Replacing `LinearRegression` with ridge (penalty chosen by 5-fold CV on the training pool
+only, features standardized on train statistics, **nothing else changed**) moves the mean
 **4.6×** and turns the worst split from −0.179 to +0.200.
 
 ## Results
@@ -21,11 +21,11 @@ QMAP's own filter chain, its five predefined splits, and its own `compute_metric
 
 | model | split 0 | 1 | 2 | 3 | 4 | min | mean | max |
 |---|---|---|---|---|---|---|---|---|
-| `esm2_ols` — HemoLinear, reproduced | −0.179 | 0.111 | 0.293 | 0.038 | 0.032 | −0.179 | **0.059** | 0.293 |
+| `esm2_ols` (HemoLinear, reproduced) | −0.179 | 0.111 | 0.293 | 0.038 | 0.032 | −0.179 | **0.059** | 0.293 |
 | *published README row* | *not published per split* | | | | | *−0.180* | *0.070* | *0.290* |
-| `esm2_ridge` — identical embeddings | 0.232 | 0.367 | 0.300 | 0.250 | 0.200 | **0.200** | **0.270** | 0.367 |
-| `desc_ridge` — 11 biophysical descriptors | 0.198 | 0.079 | 0.014 | 0.092 | 0.058 | 0.014 | 0.088 | 0.198 |
-| `desc_esm_ridge` — concatenated | 0.230 | 0.363 | 0.298 | 0.249 | 0.200 | 0.200 | 0.268 | 0.363 |
+| `esm2_ridge` (identical embeddings) | 0.232 | 0.367 | 0.300 | 0.250 | 0.200 | **0.200** | **0.270** | 0.367 |
+| `desc_ridge` (11 biophysical descriptors) | 0.198 | 0.079 | 0.014 | 0.092 | 0.058 | 0.014 | 0.088 | 0.198 |
+| `desc_esm_ridge` (concatenated) | 0.230 | 0.363 | 0.298 | 0.249 | 0.200 | 0.200 | 0.268 | 0.363 |
 
 Full per-split metrics, including Spearman, RMSE and R², are in
 [`results/hc50_reproduction.csv`](results/hc50_reproduction.csv).
@@ -68,7 +68,7 @@ the pool and all five splits.
 Lambda is selected by 5-fold CV **within the training pool only**, over the fixed grid
 `0.1 … 1e5`, and features are standardized on training statistics. The benchmark's test
 split is never read during selection or standardization, so ridge has no information
-advantage over the OLS baseline — the comparison isolates the estimator.
+advantage over the OLS baseline, so the comparison isolates the estimator.
 
 Environment of the numbers above: Python 3.12.11, `qmap-benchmark` 0.1.1, numpy 2.5.4,
 scipy 1.18.1, scikit-learn 1.9.1, torch 2.14.1, transformers 5.20.2,
